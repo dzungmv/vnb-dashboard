@@ -1,0 +1,101 @@
+.wrapperLogin {
+    width: 100%;
+    height: 100vh;
+    background: linear-gradient(
+        243.36deg,
+        rgba(117, 38, 245, 0.62) 0%,
+        rgba(127, 56, 243, 0.16) 22.93%,
+        rgba(245, 245, 245, 0.12) 98%
+    );
+    :global .login-container {
+        max-width: 1200px;
+        display: flex;
+        align-items: center;
+        margin: 0 auto;
+    }
+
+    :global .login-left {
+        width: 55%;
+
+        &-hi {
+            font-style: normal;
+            font-weight: 600;
+            font-size: 32px;
+            line-height: 48px;
+            color: #ae218f;
+            margin-bottom: 32px;
+            display: flex;
+            align-items: center;
+        }
+
+        .form {
+            width: 70%;
+        }
+
+        .form-group {
+            width: 100%;
+            margin-top: 8px;
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 3px 3px 0 rgba(31, 38, 135, 0.37);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+
+            input {
+                width: 100%;
+                padding: 18px;
+                background-color: transparent;
+            }
+        }
+
+        .form-validate {
+            margin-top: 4px;
+            .hidden {
+                visibility: hidden;
+            }
+        }
+
+        .validate {
+            color: #ff0000;
+            font-size: 14px;
+
+            margin-left: 4px;
+            transition: all 0.3s ease-in-out;
+        }
+
+        button {
+            width: 100%;
+            font-style: normal;
+            font-weight: 600;
+            font-size: 18px;
+            line-height: 30px;
+            color: #7526f5;
+            padding: 12px 0;
+            display: inline-flex;
+            justify-content: center;
+            gap: 10px;
+            align-items: center;
+            border: 1px solid #6100ff;
+            border-radius: 15px;
+            background-color: transparent;
+            margin-top: 32px;
+
+            &:hover {
+                background-color: #6100ff;
+                color: #fff;
+            }
+        }
+    }
+
+    :global .login-right {
+        width: 45%;
+        // height: 600px;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+}
