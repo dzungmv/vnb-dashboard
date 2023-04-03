@@ -176,7 +176,7 @@ const AddProduct = () => {
                     {
                         headers: {
                             authorization: user?.tokens?.accessToken,
-                            'x-client-id': user?.user?.id,
+                            'x-client-id': user?.user?._id,
                         },
                     }
                 );

@@ -94,7 +94,7 @@ const listProductType = [
 const EditProduct = () => {
     const richTextModules = {
         toolbar: [
-            [{ header: [1, 2, 3, 4, 5, 6] }],
+            [{ header: [1, 2, 3, 4, 5, 6, 0] }],
             ['bold', 'italic', 'underline', 'strike', 'blockquote'],
             [
                 { list: 'ordered' },
@@ -103,6 +103,15 @@ const EditProduct = () => {
                 { indent: '+1' },
             ],
             ['link', 'image', 'video'],
+            ['clean'],
+
+            ['code-block'],
+            [
+                {
+                    //  font size
+                    size: ['small', false, 'large', 'huge'],
+                },
+            ],
         ],
     };
 
@@ -207,7 +216,7 @@ const EditProduct = () => {
                     {
                         headers: {
                             authorization: user.tokens.accessToken,
-                            'x-client-id': user.user.id,
+                            'x-client-id': user.user._id,
                         },
                     }
                 );

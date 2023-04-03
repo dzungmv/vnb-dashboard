@@ -10,24 +10,6 @@ import { getUser } from '../../../_redux/features/user';
 import LoadingScreen from '../../../common/LoadingScreen';
 import styles from './Login.module.scss';
 
-interface LoginResponse {
-    data: {
-        message: string;
-        metadata: {
-            tokens: {
-                accessToken: string;
-                refreshToken: string;
-            };
-            user: {
-                id: string;
-                username: string;
-                email: string;
-                role: string;
-            };
-        };
-    };
-}
-
 const LoginPage = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -72,7 +54,7 @@ const LoginPage = () => {
 
         try {
             setLoginPending(true);
-            const response: LoginResponse = await axios.post(
+            const response = await axios.post(
                 `${process.env.REACT_APP_API_URL}/auth/login`,
                 {
                     email,

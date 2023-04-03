@@ -1,8 +1,10 @@
 export interface UserTypes {
     user: {
-        id: string,
+        _id: string,
         username: string,
-        email: string
+        email: string,
+        role: string,
+        verified: boolean
     },
     tokens: {
         accessToken: string,
@@ -28,5 +30,6 @@ export type ProductTypes = {
     }[],
     stores: string[],
     description: string,
-
+    createdAt: string,
+    updatedAt: string
 }
