@@ -126,9 +126,7 @@ const AddProduct = () => {
     const [type, setType] = useState<string>('');
     const [brand, setBrand] = useState<string>('');
     const [endows, setEndows] = useState<string[]>([]);
-    const [size, setSize] = useState<string>('');
     const [quantity, setQuantity] = useState<number>(1);
-    const [sizes, setSizes] = useState<SizesTypes[]>([]);
     const [stores, setStores] = useState<string[]>([]);
     const [description, setDescription] = useState<string>('');
 
@@ -143,18 +141,6 @@ const AddProduct = () => {
             }
         },
 
-        addSizes() {
-            if (size === '' || quantity === 0) {
-                toast.error('Please fill all fields');
-            }
-            if (size && quantity) {
-                setSizes([...sizes, { size_name: size, quantity }]);
-                setSize('');
-                setQuantity(1);
-                toast.success('Add size successfully');
-            }
-        },
-
         async createProduct() {
             const data = {
                 name,
@@ -164,7 +150,7 @@ const AddProduct = () => {
                 type,
                 brand,
                 endows,
-                sizes,
+                quantity,
                 stores,
                 description,
             };
@@ -190,7 +176,7 @@ const AddProduct = () => {
                 setPriceMarket(0);
                 setBrand('');
                 setEndows([]);
-                setSizes([]);
+                setQuantity(1);
                 setStores([]);
                 setDescription('');
                 navigate('/');
@@ -419,108 +405,82 @@ const AddProduct = () => {
                             <div className='wrapper-group'>
                                 <div className='form-group'>
                                     <input
-                                        type='text'
-                                        id='input-size'
-                                        value={size}
+                                        type='number'
+                                        id='input-quantity'
+                                        value={quantity}
                                         onChange={(e) =>
-                                            setSize(e.target.value)
+                                            setQuantity(Number(e.target.value))
                                         }
                                         required
                                     />
                                     <label
-                                        htmlFor='input-size'
+                                        htmlFor='input-quantity'
                                         className='label'>
-                                        Size name
+                                        Quantity
                                     </label>
                                 </div>
-                                {size && size.length > 0 && (
-                                    <div className='form-size'>
-                                        <div className='form-group'>
-                                            <input
-                                                type='number'
-                                                id='input-quantity'
-                                                value={quantity}
-                                                onChange={(e) =>
-                                                    setQuantity(
-                                                        Number(e.target.value)
-                                                    )
-                                                }
-                                                required
-                                            />
-                                            <label
-                                                htmlFor='input-quantity'
-                                                className='label'>
-                                                Quantity
-                                            </label>
-                                        </div>
 
-                                        <div
-                                            className='add-size'
-                                            onClick={HANDLE.addSizes}>
-                                            Add size
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
+                                <div
+                                    className='form-group selection'
+                                    onClick={() => {
+                                        setStoresBox((prev) => !prev);
+                                    }}>
+                                    <span>Choose store</span>
+                                    <i
+                                        className={`fa-regular ${
+                                            storesBox
+                                                ? `fa-regular fa-chevron-up`
+                                                : `fa-regular fa-chevron-down`
+                                        } `}></i>
 
-                            <div
-                                className='form-group selection'
-                                onClick={() => {
-                                    setStoresBox((prev) => !prev);
-                                }}>
-                                <span>Choose store</span>
-                                <i
-                                    className={`fa-regular ${
-                                        storesBox
-                                            ? `fa-regular fa-chevron-up`
-                                            : `fa-regular fa-chevron-down`
-                                    } `}></i>
-
-                                {storesBox && (
-                                    <div className='selection-box'>
-                                        {listStores.map(
-                                            (item, index: number) => {
-                                                return (
-                                                    <div
-                                                        key={index}
-                                                        className={
-                                                            stores.includes(
-                                                                item
-                                                            )
-                                                                ? 'selection-item selection-item-active'
-                                                                : 'selection-item'
-                                                        }
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            if (
+                                    {storesBox && (
+                                        <div className='selection-box'>
+                                            {listStores.map(
+                                                (item, index: number) => {
+                                                    return (
+                                                        <div
+                                                            key={index}
+                                                            className={
                                                                 stores.includes(
                                                                     item
                                                                 )
-                                                            ) {
-                                                                setStores(
-                                                                    stores.filter(
-                                                                        (
-                                                                            store
-                                                                        ) =>
-                                                                            store !==
-                                                                            item
-                                                                    )
-                                                                );
-                                                            } else {
-                                                                setStores([
-                                                                    ...stores,
-                                                                    item,
-                                                                ]);
+                                                                    ? 'selection-item selection-item-active'
+                                                                    : 'selection-item'
                                                             }
-                                                            setStoresBox(false);
-                                                        }}>
-                                                        {item}
-                                                    </div>
-                                                );
-                                            }
-                                        )}
-                                    </div>
-                                )}
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                if (
+                                                                    stores.includes(
+                                                                        item
+                                                                    )
+                                                                ) {
+                                                                    setStores(
+                                                                        stores.filter(
+                                                                            (
+                                                                                store
+                                                                            ) =>
+                                                                                store !==
+                                                                                item
+                                                                        )
+                                                                    );
+                                                                } else {
+                                                                    setStores([
+                                                                        ...stores,
+                                                                        item,
+                                                                    ]);
+                                                                }
+                                                                setStoresBox(
+                                                                    false
+                                                                );
+                                                            }}>
+                                                            {item}
+                                                        </div>
+                                                    );
+                                                }
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
                             </div>
 
                             <div className='custom-editor'>
@@ -594,30 +554,6 @@ const AddProduct = () => {
                                 <div className='endow-icon'>
                                     <i className='fa-solid fa-gift'></i>
                                     <span>Endows</span>
-                                </div>
-                            </div>
-
-                            <div className='sizes'>
-                                <p>Choose size:</p>
-                                <div className='sizes-content'>
-                                    {sizes &&
-                                        sizes.length > 0 &&
-                                        sizes.map(
-                                            (
-                                                item: SizesTypes,
-                                                index: number
-                                            ) => {
-                                                return (
-                                                    <div
-                                                        className='size-item'
-                                                        key={index}>
-                                                        <span>
-                                                            {item.size_name}
-                                                        </span>
-                                                    </div>
-                                                );
-                                            }
-                                        )}
                                 </div>
                             </div>
                         </div>
