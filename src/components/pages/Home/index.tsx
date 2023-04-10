@@ -17,9 +17,9 @@ const ITEM_MENU = [
     },
     {
         id: 2,
-        name: 'Artists',
-        icon: 'fa-solid fa-user',
-        url: '/artists',
+        name: 'Orders',
+        icon: 'fa-solid fa-cart-shopping',
+        url: '/orders',
     },
 ];
 
@@ -45,9 +45,13 @@ const HomePage: React.FC = () => {
             await dispatch(logout());
             setLogoutPending(false);
             navigate('/login');
-        } catch (error) {
+        } catch (error: any) {
             setLogoutPending(false);
             console.error(error);
+            if (error?.response?.status === 401) {
+                dispatch(logout());
+                navigate('/login');
+            }
         }
     };
     return (
