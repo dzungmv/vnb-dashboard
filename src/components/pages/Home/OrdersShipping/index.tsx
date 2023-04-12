@@ -11,7 +11,7 @@ import { logout } from '../../../_redux/features/user';
 
 import styles from './orders.module.scss';
 
-const AllOrders: React.FC = () => {
+const OrderShipping: React.FC = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const user: UserTypes = useSelector((state: any) => state.user.user);
@@ -22,10 +22,6 @@ const AllOrders: React.FC = () => {
     const [detailsModal, setDetailsModal] = useState<boolean>(false);
     const [products, setProducts] = useState<CartType[]>([]);
 
-    const [shippingModal, setShippingModal] = useState<boolean>(false);
-    const [shippingId, setShippingId] = useState<string>('');
-    const [isShippingPending, setIsShippingPending] = useState<boolean>(false);
-
     const [returnsModal, setReturnsModal] = useState<boolean>(false);
     const [returnsId, setReturnsId] = useState<string>('');
     const [isReturnsPending, setIsReturnsPending] = useState<boolean>(false);
@@ -33,11 +29,6 @@ const AllOrders: React.FC = () => {
     const [completedModal, setCompletedModal] = useState<boolean>(false);
     const [completedId, setCompletedId] = useState<string>('');
     const [isCompletedPending, setIsCompletedPending] =
-        useState<boolean>(false);
-
-    const [cancelledModal, setCancelledModal] = useState<boolean>(false);
-    const [cancelledId, setCancelledId] = useState<string>('');
-    const [isCancelledPending, setIsCancelledPending] =
         useState<boolean>(false);
 
     const mergeData = data?.map((item: any) => {
@@ -50,7 +41,11 @@ const AllOrders: React.FC = () => {
 
     const flattenData = mergeData?.flat();
 
-    const finalData = flattenData?.sort((x: OrderType, y: OrderType) => {
+    const shippingData = flattenData?.filter(
+        (item: OrderType) => item.status === 'shipping'
+    );
+
+    const finalData = shippingData?.sort((x: OrderType, y: OrderType) => {
         return new Date(x.updatedAt) < new Date(y.updatedAt) ? 1 : -1;
     });
 
@@ -58,10 +53,6 @@ const AllOrders: React.FC = () => {
         openDetailsModal: (products: CartType[]) => {
             setProducts(products);
             setDetailsModal(true);
-        },
-        openShippingModal: (id: string) => {
-            setShippingId(id);
-            setShippingModal(true);
         },
         openReturnsModal: (id: string) => {
             setReturnsId(id);
@@ -71,41 +62,7 @@ const AllOrders: React.FC = () => {
             setCompletedId(id);
             setCompletedModal(true);
         },
-        openCancelledModal: (id: string) => {
-            setCancelledId(id);
-            setCancelledModal(true);
-        },
 
-        changeToShipping: async () => {
-            try {
-                setIsShippingPending(true);
-                axios.put(
-                    `${process.env.REACT_APP_API_URL}/admin/update-order/${shippingId}`,
-                    {
-                        status: 'shipping',
-                    },
-                    {
-                        headers: {
-                            authorization: user?.tokens?.accessToken,
-                            'x-client-id': user?.user?._id,
-                        },
-                    }
-                );
-
-                setIsShippingPending(false);
-                setShippingModal(false);
-                swal({
-                    title: 'Success',
-                    text: 'Order status changed to shipping',
-                    icon: 'success',
-                }).then(() => {
-                    navigate('/orders-shipping');
-                });
-            } catch (error) {
-                console.log(error);
-                setIsShippingPending(false);
-            }
-        },
         changeToReturns: async () => {
             try {
                 setIsReturnsPending(true);
@@ -131,9 +88,12 @@ const AllOrders: React.FC = () => {
                 }).then(() => {
                     navigate('/orders-returns');
                 });
-            } catch (error) {
-                console.log(error);
+            } catch (error: any) {
                 setIsReturnsPending(false);
+                if (error?.response?.status === 401) {
+                    dispatch(logout());
+                    navigate('/login');
+                }
             }
         },
         changToCompleted: async () => {
@@ -161,38 +121,12 @@ const AllOrders: React.FC = () => {
                 }).then(() => {
                     navigate('/orders-delivered');
                 });
-            } catch (error) {
-                console.log(error);
+            } catch (error: any) {
                 setIsCompletedPending(false);
-            }
-        },
-        changeToCancelled: async () => {
-            try {
-                setIsCancelledPending(true);
-                await axios.put(
-                    `${process.env.REACT_APP_API_URL}/admin/update-order/${cancelledId}`,
-                    {
-                        status: 'cancelled',
-                    },
-                    {
-                        headers: {
-                            authorization: user?.tokens?.accessToken,
-                            'x-client-id': user?.user?._id,
-                        },
-                    }
-                );
-
-                setIsCancelledPending(false);
-                setCancelledModal(false);
-                swal({
-                    title: 'Success',
-                    text: 'Order status changed to cancelled',
-                    icon: 'success',
-                }).then(() => {
-                    navigate('/orders-cancelled');
-                });
-            } catch (error) {
-                setIsCancelledPending(false);
+                if (error?.response?.status === 401) {
+                    dispatch(logout());
+                    navigate('/login');
+                }
             }
         },
     };
@@ -212,12 +146,9 @@ const AllOrders: React.FC = () => {
                 );
                 setData(res?.data?.data);
                 setLoading(false);
-            } catch (error: any) {
+            } catch (error) {
+                console.error(error);
                 setLoading(false);
-                if (error?.response?.status === 401) {
-                    dispatch(logout());
-                    navigate('/login');
-                }
             }
         })();
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -226,7 +157,7 @@ const AllOrders: React.FC = () => {
     return (
         <>
             <section className={styles.wrapperOrders}>
-                <h1>All orders</h1>
+                <h1>Orders shipping</h1>
                 <div className='content'>
                     {finalData && finalData.length > 0 ? (
                         <div className='product-table-section'>
@@ -294,21 +225,9 @@ const AllOrders: React.FC = () => {
                                                     </td>
                                                     <td
                                                         className={
-                                                            (item.status ===
-                                                                'pending' &&
-                                                                'center pending') ||
-                                                            (item.status ===
+                                                            item.status ===
                                                                 'shipping' &&
-                                                                'center shipping') ||
-                                                            (item.status ===
-                                                                'completed' &&
-                                                                'center completed') ||
-                                                            (item.status ===
-                                                                'cancelled' &&
-                                                                'center cancelled') ||
-                                                            (item.status ===
-                                                                'returns' &&
-                                                                'center returns')
+                                                            'center shipping'
                                                         }
                                                         style={{
                                                             textTransform:
@@ -335,53 +254,29 @@ const AllOrders: React.FC = () => {
                                                             Details
                                                         </div>
 
-                                                        {(item.status ===
-                                                            'pending' && (
+                                                        {item.status ===
+                                                            'shipping' && (
                                                             <div className='action-wrapper'>
                                                                 <div
-                                                                    className='action-item action-item-shipping'
+                                                                    className='action-item action-item-completed'
                                                                     onClick={() =>
-                                                                        HANDLE.openShippingModal(
+                                                                        HANDLE.openCompletedModal(
                                                                             item._id
                                                                         )
                                                                     }>
-                                                                    Shipping
+                                                                    Completed
                                                                 </div>
-
                                                                 <div
-                                                                    className='action-item action-item-delete'
+                                                                    className='action-item action-item-returns'
                                                                     onClick={() =>
-                                                                        HANDLE.openCancelledModal(
+                                                                        HANDLE.openReturnsModal(
                                                                             item._id
                                                                         )
                                                                     }>
-                                                                    Cancel
+                                                                    Returns
                                                                 </div>
                                                             </div>
-                                                        )) ||
-                                                            (item.status ===
-                                                                'shipping' && (
-                                                                <div className='action-wrapper'>
-                                                                    <div
-                                                                        className='action-item action-item-completed'
-                                                                        onClick={() =>
-                                                                            HANDLE.openCompletedModal(
-                                                                                item._id
-                                                                            )
-                                                                        }>
-                                                                        Completed
-                                                                    </div>
-                                                                    <div
-                                                                        className='action-item action-item-returns'
-                                                                        onClick={() =>
-                                                                            HANDLE.openReturnsModal(
-                                                                                item._id
-                                                                            )
-                                                                        }>
-                                                                        Returns
-                                                                    </div>
-                                                                </div>
-                                                            ))}
+                                                        )}
                                                     </td>
                                                 </tr>
                                             );
@@ -436,39 +331,6 @@ const AllOrders: React.FC = () => {
                 </Modal>
             )}
 
-            {shippingModal && (
-                <Modal
-                    title='Change order to shipping'
-                    show={shippingModal}
-                    close={() => {
-                        setShippingId('');
-                        setShippingModal(false);
-                    }}>
-                    <div className={styles.wrapperShippingModal}>
-                        <div className='content'>
-                            {/* <p>{shippingId}</p> */}
-                            <p>
-                                Are you sure to change this order to shipping?
-                            </p>
-                        </div>
-
-                        <div className='btn-wrapper'>
-                            <div
-                                className='close'
-                                onClick={() => {
-                                    setShippingId('');
-                                    setShippingModal(false);
-                                }}>
-                                Close
-                            </div>
-                            <button onClick={HANDLE.changeToShipping}>
-                                Confirm
-                            </button>
-                        </div>
-                    </div>
-                </Modal>
-            )}
-
             {completedModal && (
                 <Modal
                     title='Change order to completed'
@@ -494,36 +356,6 @@ const AllOrders: React.FC = () => {
                                 Close
                             </div>
                             <button onClick={HANDLE.changToCompleted}>
-                                Confirm
-                            </button>
-                        </div>
-                    </div>
-                </Modal>
-            )}
-
-            {cancelledModal && (
-                <Modal
-                    title='Change order to cancelled'
-                    show={cancelledModal}
-                    close={() => {
-                        setCancelledId('');
-                        setCompletedModal(false);
-                    }}>
-                    <div className={styles.wrapperShippingModal}>
-                        <div className='content'>
-                            <p>Are you sure to cancel this order?</p>
-                        </div>
-
-                        <div className='btn-wrapper'>
-                            <div
-                                className='close'
-                                onClick={() => {
-                                    setCancelledId('');
-                                    setCancelledModal(false);
-                                }}>
-                                Close
-                            </div>
-                            <button onClick={HANDLE.changeToCancelled}>
                                 Confirm
                             </button>
                         </div>
@@ -561,13 +393,11 @@ const AllOrders: React.FC = () => {
                 </Modal>
             )}
 
-            {isShippingPending ||
-                isCancelledPending ||
-                isCompletedPending ||
+            {isCompletedPending ||
                 (isReturnsPending && <LoadingScreen content='Loading...' />)}
         </>
     );
 };
 
-AllOrders.displayName = 'AllOrders';
-export default AllOrders;
+OrderShipping.displayName = 'OrderShipping';
+export default OrderShipping;

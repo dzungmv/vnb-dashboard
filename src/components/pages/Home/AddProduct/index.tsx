@@ -13,11 +13,6 @@ import { logout } from '../../../_redux/features/user';
 
 import styles from '../Home.module.scss';
 
-type SizesTypes = {
-    size_name: string;
-    quantity: number;
-};
-
 const listBranchs = [
     {
         id: 1,

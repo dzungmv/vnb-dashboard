@@ -9,15 +9,9 @@ import { toast } from 'react-toastify';
 
 import LoadingScreen from '../../../common/LoadingScreen';
 import Modal from '../../../common/Modal';
-import { ProductTypes } from '../../../types';
 import { logout } from '../../../_redux/features/user';
 
 import styles from '../Home.module.scss';
-
-type SizesTypes = {
-    size_name: string;
-    quantity: number;
-};
 
 const listBranchs = [
     {
@@ -125,8 +119,6 @@ const EditProduct = () => {
     const [open, setOpen] = useState<boolean>(false);
     const [isPendingUpdateProduct, setIsPendingUpdateProduct] =
         useState<boolean>(false);
-    const [isPendingGetProduct, setIsPendingGetProduct] =
-        useState<boolean>(false);
 
     const [brandBox, setBrandBox] = useState<boolean>(false);
     const [endowsBox, setEndowsBox] = useState<boolean>(false);
@@ -148,11 +140,10 @@ const EditProduct = () => {
     useEffect(() => {
         (async () => {
             try {
-                setIsPendingGetProduct(true);
                 const response = await axios.get(
                     `${process.env.REACT_APP_API_URL}/product/get-product/${slug}`
                 );
-                setIsPendingGetProduct(false);
+
                 setId(response?.data?.data?._id);
                 setName(response?.data?.data?.name);
                 setImage(response?.data?.data?.image);
@@ -166,7 +157,6 @@ const EditProduct = () => {
                 setDescription(response?.data?.data?.description);
             } catch (error) {
                 toast.error('Something went wrong!');
-                setIsPendingGetProduct(false);
             }
         })();
     }, [slug]);
@@ -209,9 +199,13 @@ const EditProduct = () => {
                 setIsPendingUpdateProduct(false);
                 toast.success('Update product successfully');
                 navigate('/');
-            } catch (error) {
+            } catch (error: any) {
                 toast.error('Something went wrong!');
                 setIsPendingUpdateProduct(false);
+                if (error?.response?.status === 401) {
+                    dispatch(logout());
+                    navigate('/login');
+                }
             }
         },
     };

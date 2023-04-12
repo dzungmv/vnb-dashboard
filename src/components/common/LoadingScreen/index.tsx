@@ -1,10 +1,10 @@
 import React from 'react';
 import styles from './LoadingSC.module.scss';
 
-const Animation = require('react-reveal/Flip');
+const Animation = require('react-reveal/Zoom');
 
 type Props = {
-    content: string;
+    content: string | 'Loading...';
 };
 const LoadingScreen: React.FC<Props> = (props): JSX.Element => {
     return (

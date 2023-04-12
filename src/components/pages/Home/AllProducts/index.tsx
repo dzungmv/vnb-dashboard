@@ -1,5 +1,7 @@
 import Skeleton from 'react-loading-skeleton';
 import { useNavigate } from 'react-router-dom';
+import { Table } from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 import useFetch from '../../../hooks/useFetch';
 
@@ -78,7 +80,102 @@ const AllProduct = () => {
                     </div>
 
                     <div className='product-table-section'>
-                        <table id='table-product'>
+                        <Table hover responsive>
+                            <thead>
+                                <tr>
+                                    <th>Image</th>
+                                    <th>Name</th>
+
+                                    <th>Price</th>
+
+                                    <th>Market price</th>
+                                    <th>Brand</th>
+
+                                    <th>Type</th>
+
+                                    <th>Quantity</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {isPending ? (
+                                    <tr>
+                                        <td>
+                                            <Skeleton />
+                                        </td>
+                                        <td>
+                                            <Skeleton />
+                                        </td>
+                                        <td>
+                                            <Skeleton />
+                                        </td>
+                                        <td>
+                                            <Skeleton />
+                                        </td>
+                                        <td>
+                                            <Skeleton />
+                                        </td>
+                                    </tr>
+                                ) : (
+                                    songs.map((item: ProductTypes) => {
+                                        return (
+                                            <tr
+                                                key={item._id}
+                                                className='table-item'>
+                                                <td>
+                                                    <img
+                                                        className='table-item--avatar'
+                                                        src={item.image}
+                                                        alt='avatar'
+                                                        loading='lazy'
+                                                    />
+                                                </td>
+                                                <td>{item.name}</td>
+                                                <td>
+                                                    {item.price.toLocaleString()}
+                                                </td>
+
+                                                <td>
+                                                    {item.price_market.toLocaleString()}
+                                                </td>
+                                                <td>{item.brand}</td>
+                                                <td>{item.type}</td>
+
+                                                <td>{item.quantity}</td>
+
+                                                <td className='action'>
+                                                    <div
+                                                        className='action-item action-item-edit'
+                                                        onClick={() =>
+                                                            navigate(
+                                                                `/edit-product/${item.slug}`
+                                                            )
+                                                        }>
+                                                        Edit
+                                                    </div>
+                                                    <div
+                                                        className='action-item action-item-delete'
+                                                        onClick={() => {
+                                                            setOpenModalDelete(
+                                                                true
+                                                            );
+                                                            setProductId(
+                                                                item._id
+                                                            );
+                                                            setProductName(
+                                                                item.name
+                                                            );
+                                                        }}>
+                                                        Delete
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        );
+                                    })
+                                )}
+                            </tbody>
+                        </Table>
+                        {/* <table id='table-product'>
                             <thead>
                                 <tr className='table-header'>
                                     <th className='table-header--col1 center'>
@@ -98,10 +195,12 @@ const AllProduct = () => {
                                     </th>
 
                                     <th className='table-header--col1 center'>
-                                        Product type
+                                        Type
                                     </th>
 
-                                    <th></th>
+                                    <th className='table-header--col1 center'>
+                                        Quantity
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -139,11 +238,11 @@ const AllProduct = () => {
                                                 </td>
                                                 <td>{item.name}</td>
                                                 <td className='center'>
-                                                    {item.price}
+                                                    {item.price.toLocaleString()}
                                                 </td>
 
                                                 <td className='center'>
-                                                    {item.price_market}
+                                                    {item.price_market.toLocaleString()}
                                                 </td>
                                                 <td className='center'>
                                                     {item.brand}
@@ -151,6 +250,11 @@ const AllProduct = () => {
                                                 <td className='center'>
                                                     {item.type}
                                                 </td>
+
+                                                <td className='center'>
+                                                    {item.quantity}
+                                                </td>
+
                                                 <td className='action'>
                                                     <div
                                                         className='action-item action-item-edit'
@@ -182,7 +286,7 @@ const AllProduct = () => {
                                     })
                                 )}
                             </tbody>
-                        </table>
+                        </table> */}
                     </div>
                 </section>
             </section>

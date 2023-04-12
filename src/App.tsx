@@ -4,9 +4,14 @@ import PrivateRoute from './components/common/PrivateRoute';
 import LoginPage from './components/pages/Auth/Login';
 import HomePage from './components/pages/Home';
 import AddProduct from './components/pages/Home/AddProduct';
-import AllOrders from './components/pages/Home/Orders';
 import AllProduct from './components/pages/Home/AllProducts';
 import EditProduct from './components/pages/Home/EditProduct';
+import AllOrders from './components/pages/Home/Orders';
+import OrderCancelled from './components/pages/Home/OrdersCancelled';
+import OrderCompleted from './components/pages/Home/OrdersCompleted';
+import OrdersPending from './components/pages/Home/OrdersPending';
+import OrderReturns from './components/pages/Home/OrdersReturns';
+import OrderShipping from './components/pages/Home/OrdersShipping';
 
 function App() {
     return (
@@ -27,6 +32,26 @@ function App() {
                             element={<EditProduct />}
                         />
                         <Route path='/orders' element={<AllOrders />} />
+                        <Route
+                            path='/orders-pending'
+                            element={<OrdersPending />}
+                        />
+                        <Route
+                            path='/orders-shipping'
+                            element={<OrderShipping />}
+                        />
+                        <Route
+                            path='/orders-delivered'
+                            element={<OrderCompleted />}
+                        />
+                        <Route
+                            path='/orders-returns'
+                            element={<OrderReturns />}
+                        />
+                        <Route
+                            path='/orders-cancelled'
+                            element={<OrderCancelled />}
+                        />
                     </Route>
 
                     <Route path='/login' element={<LoginPage />} />

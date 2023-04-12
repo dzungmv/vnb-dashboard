@@ -21,6 +21,36 @@ const ITEM_MENU = [
         icon: 'fa-solid fa-cart-shopping',
         url: '/orders',
     },
+    {
+        id: 3,
+        name: 'Pending',
+        icon: 'fa-solid fa-clock',
+        url: '/orders-pending',
+    },
+    {
+        id: 4,
+        name: 'Shipping',
+        icon: 'fa-solid fa-truck-fast',
+        url: '/orders-shipping',
+    },
+    {
+        id: 5,
+        name: 'Delivered',
+        icon: 'fa-solid fa-clipboard-list-check',
+        url: '/orders-delivered',
+    },
+    {
+        id: 6,
+        name: 'Returns',
+        icon: 'fa-solid fa-undo',
+        url: '/orders-returns',
+    },
+    {
+        id: 7,
+        name: 'Cancelled',
+        icon: 'fa-solid fa-file-slash',
+        url: '/orders-cancelled',
+    },
 ];
 
 const HomePage: React.FC = () => {
@@ -74,7 +104,9 @@ const HomePage: React.FC = () => {
                                             to={item.url}
                                             className='item'
                                             key={item.id}>
-                                            <i className={item.icon}></i>
+                                            <div className='item-label'>
+                                                <i className={item.icon}></i>
+                                            </div>
                                             <span>{item.name}</span>
                                         </NavLink>
                                     );
