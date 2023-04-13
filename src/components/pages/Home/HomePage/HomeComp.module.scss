@@ -1,0 +1,55 @@
+@use './../../../../styles/variables' as var;
+
+.wrapperHomeComp {
+    padding: 0 24px;
+    :global .header {
+        display: flex;
+
+        h1 {
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+    }
+
+    :global .summary {
+        margin-top: 24px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+
+        .summary-item {
+            border-radius: 4px;
+            width: calc(100% / 4 - 12px);
+            padding: 12px;
+            padding-bottom: 8px;
+            box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+
+            &:nth-child(1) {
+                border-bottom: 3px solid #c2528b;
+            }
+
+            &:nth-child(2) {
+                border-bottom: 3px solid #f380b9;
+            }
+
+            &:nth-child(3) {
+                border-bottom: 3px solid #5f50a9;
+            }
+
+            &:nth-child(4) {
+                border-bottom: 3px solid #9652c2;
+            }
+        }
+        .heading {
+            font-size: 16px;
+        }
+
+        .content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+    }
+}

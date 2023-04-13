@@ -17,36 +17,42 @@ const ITEM_MENU = [
     },
     {
         id: 2,
+        name: 'Products',
+        icon: 'fa-solid fa-boxes',
+        url: '/products',
+    },
+    {
+        id: 3,
         name: 'Orders',
         icon: 'fa-solid fa-cart-shopping',
         url: '/orders',
     },
     {
-        id: 3,
+        id: 4,
         name: 'Pending',
         icon: 'fa-solid fa-clock',
         url: '/orders-pending',
     },
     {
-        id: 4,
+        id: 5,
         name: 'Shipping',
         icon: 'fa-solid fa-truck-fast',
         url: '/orders-shipping',
     },
     {
-        id: 5,
+        id: 6,
         name: 'Delivered',
         icon: 'fa-solid fa-clipboard-list-check',
         url: '/orders-delivered',
     },
     {
-        id: 6,
+        id: 7,
         name: 'Returns',
         icon: 'fa-solid fa-undo',
         url: '/orders-returns',
     },
     {
-        id: 7,
+        id: 8,
         name: 'Cancelled',
         icon: 'fa-solid fa-file-slash',
         url: '/orders-cancelled',
@@ -102,7 +108,7 @@ const HomePage: React.FC = () => {
                                     return (
                                         <NavLink
                                             to={item.url}
-                                            className='item'
+                                            className={`item ${item.name}`}
                                             key={item.id}>
                                             <div className='item-label'>
                                                 <i className={item.icon}></i>

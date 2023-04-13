@@ -1,9 +1,12 @@
 import axios from 'axios';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import { useEffect, useState } from 'react';
+import { Table } from 'react-bootstrap';
 import Skeleton from 'react-loading-skeleton';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import swal from 'sweetalert';
+
 import LoadingScreen from '../../../common/LoadingScreen';
 import Modal from '../../../common/Modal';
 import { CartType, OrderType, UserTypes } from '../../../types';
@@ -79,7 +82,7 @@ const AllOrders: React.FC = () => {
         changeToShipping: async () => {
             try {
                 setIsShippingPending(true);
-                axios.put(
+                axios.patch(
                     `${process.env.REACT_APP_API_URL}/admin/update-order/${shippingId}`,
                     {
                         status: 'shipping',
@@ -109,7 +112,7 @@ const AllOrders: React.FC = () => {
         changeToReturns: async () => {
             try {
                 setIsReturnsPending(true);
-                await axios.put(
+                await axios.patch(
                     `${process.env.REACT_APP_API_URL}/admin/update-order/${returnsId}`,
                     {
                         status: 'returns',
@@ -139,7 +142,7 @@ const AllOrders: React.FC = () => {
         changToCompleted: async () => {
             try {
                 setIsCompletedPending(true);
-                await axios.put(
+                await axios.patch(
                     `${process.env.REACT_APP_API_URL}/admin/update-order/${completedId}`,
                     {
                         status: 'completed',
@@ -169,7 +172,7 @@ const AllOrders: React.FC = () => {
         changeToCancelled: async () => {
             try {
                 setIsCancelledPending(true);
-                await axios.put(
+                await axios.patch(
                     `${process.env.REACT_APP_API_URL}/admin/update-order/${cancelledId}`,
                     {
                         status: 'cancelled',
@@ -230,30 +233,18 @@ const AllOrders: React.FC = () => {
                 <div className='content'>
                     {finalData && finalData.length > 0 ? (
                         <div className='product-table-section'>
-                            <table id='table-product'>
+                            <Table hover responsive borderless>
                                 <thead>
-                                    <tr className='table-header'>
-                                        <th className='table-header--col1 center'>
-                                            Orderer
-                                        </th>
-                                        <th className='table-header--col1 center'>
-                                            Phone number
-                                        </th>
+                                    <tr className=''>
+                                        <th className='center'>Orderer</th>
+                                        <th className=''>Phone number</th>
 
-                                        <th className='table-header--col1 center'>
-                                            Payment
-                                        </th>
+                                        <th className='center'>Payment</th>
 
-                                        <th className='table-header--col1 center'>
-                                            Address
-                                        </th>
-                                        <th className='table-header--col1 center'>
-                                            Status
-                                        </th>
+                                        <th className='center'>Address</th>
+                                        <th className='center'>Status</th>
 
-                                        <th className='table-header--col1 center'>
-                                            Total
-                                        </th>
+                                        <th className='center'>Total</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -388,7 +379,7 @@ const AllOrders: React.FC = () => {
                                         })
                                     )}
                                 </tbody>
-                            </table>
+                            </Table>
                         </div>
                     ) : (
                         <h1>No orders</h1>

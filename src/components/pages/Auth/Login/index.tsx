@@ -100,7 +100,7 @@ const LoginPage = () => {
                 <div className='login-container'>
                     <div className='login-left'>
                         <h3 className='login-left-hi'>
-                            Hi, stranger
+                            VNB Admin
                             <span
                                 style={{
                                     display: 'inline-block',

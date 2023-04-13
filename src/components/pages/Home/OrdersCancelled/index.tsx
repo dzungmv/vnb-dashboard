@@ -1,6 +1,7 @@
 import axios from 'axios';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
+import { Table } from 'react-bootstrap';
 import Skeleton from 'react-loading-skeleton';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -79,33 +80,22 @@ const OrderCancelled: React.FC = () => {
                 <div className='content'>
                     {finalData && finalData.length > 0 ? (
                         <div className='product-table-section'>
-                            <table id='table-product'>
+                            <Table hover responsive borderless>
                                 <thead>
                                     <tr className='table-header'>
-                                        <th className='table-header--col1 center'>
-                                            Time
-                                        </th>
-                                        <th className='table-header--col1 center'>
-                                            Orderer
-                                        </th>
-                                        <th className='table-header--col1 center'>
+                                        <th>Time</th>
+                                        <th className=' center'>Orderer</th>
+                                        <th className=' center'>
                                             Phone number
                                         </th>
 
-                                        <th className='table-header--col1 center'>
-                                            Payment
-                                        </th>
+                                        <th className=' center'>Payment</th>
 
-                                        <th className='table-header--col1 center'>
-                                            Address
-                                        </th>
-                                        <th className='table-header--col1 center'>
-                                            Status
-                                        </th>
+                                        <th className=' center'>Address</th>
+                                        <th className=' center'>Status</th>
 
-                                        <th className='table-header--col1 center'>
-                                            Total
-                                        </th>
+                                        <th className=' center'>Total</th>
+                                        <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -133,7 +123,7 @@ const OrderCancelled: React.FC = () => {
                                                 <tr
                                                     key={item._id}
                                                     className='table-item'>
-                                                    <td className='center'>
+                                                    <td>
                                                         {moment(
                                                             item.updatedAt
                                                         ).format('lll')}
@@ -169,15 +159,17 @@ const OrderCancelled: React.FC = () => {
                                                         {item.total.toLocaleString()}
                                                         ₫
                                                     </td>
-                                                    <td className='action'>
-                                                        <div
-                                                            className='action-item action-item-edit'
-                                                            onClick={() =>
-                                                                HANDLE.openDetailsModal(
-                                                                    item.products
-                                                                )
-                                                            }>
-                                                            Details
+                                                    <td>
+                                                        <div className='action'>
+                                                            <div
+                                                                className='action-item action-item-edit'
+                                                                onClick={() =>
+                                                                    HANDLE.openDetailsModal(
+                                                                        item.products
+                                                                    )
+                                                                }>
+                                                                Details
+                                                            </div>
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -185,7 +177,7 @@ const OrderCancelled: React.FC = () => {
                                         })
                                     )}
                                 </tbody>
-                            </table>
+                            </Table>
                         </div>
                     ) : (
                         <h1>No orders</h1>

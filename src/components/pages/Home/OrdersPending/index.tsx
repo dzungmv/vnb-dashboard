@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { Table } from 'react-bootstrap';
 import Skeleton from 'react-loading-skeleton';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -66,7 +67,7 @@ const OrdersPending: React.FC = () => {
         changeToShipping: async () => {
             try {
                 setIsShippingPending(true);
-                axios.put(
+                axios.patch(
                     `${process.env.REACT_APP_API_URL}/admin/update-order/${shippingId}`,
                     {
                         status: 'shipping',
@@ -97,7 +98,7 @@ const OrdersPending: React.FC = () => {
         changeToCancelled: async () => {
             try {
                 setIsCancelledPending(true);
-                await axios.put(
+                await axios.patch(
                     `${process.env.REACT_APP_API_URL}/admin/update-order/${cancelledId}`,
                     {
                         status: 'cancelled',
@@ -162,30 +163,19 @@ const OrdersPending: React.FC = () => {
                 <div className='content'>
                     {finalData && finalData.length > 0 ? (
                         <div className='product-table-section'>
-                            <table id='table-product'>
+                            <Table hover responsive borderless>
                                 <thead>
-                                    <tr className='table-header'>
-                                        <th className='table-header--col1 center'>
-                                            Orderer
-                                        </th>
-                                        <th className='table-header--col1 center'>
-                                            Phone number
-                                        </th>
+                                    <tr className=''>
+                                        <th className='center'>Orderer</th>
+                                        <th className=''>Phone number</th>
 
-                                        <th className='table-header--col1 center'>
-                                            Payment
-                                        </th>
+                                        <th className='center'>Payment</th>
 
-                                        <th className='table-header--col1 center'>
-                                            Address
-                                        </th>
-                                        <th className='table-header--col1 center'>
-                                            Status
-                                        </th>
+                                        <th className='center'>Address</th>
+                                        <th className='center'>Status</th>
 
-                                        <th className='table-header--col1 center'>
-                                            Total
-                                        </th>
+                                        <th className='center'>Total</th>
+                                        <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -244,36 +234,38 @@ const OrdersPending: React.FC = () => {
                                                         {item.total.toLocaleString()}
                                                         ₫
                                                     </td>
-                                                    <td className='action'>
-                                                        <div
-                                                            className='action-item action-item-edit'
-                                                            onClick={() =>
-                                                                HANDLE.openDetailsModal(
-                                                                    item.products
-                                                                )
-                                                            }>
-                                                            Details
-                                                        </div>
-
-                                                        <div className='action-wrapper'>
+                                                    <td>
+                                                        <div className='action'>
                                                             <div
-                                                                className='action-item action-item-shipping'
+                                                                className='action-item action-item-edit'
                                                                 onClick={() =>
-                                                                    HANDLE.openShippingModal(
-                                                                        item._id
+                                                                    HANDLE.openDetailsModal(
+                                                                        item.products
                                                                     )
                                                                 }>
-                                                                Shipping
+                                                                Details
                                                             </div>
 
-                                                            <div
-                                                                className='action-item action-item-delete'
-                                                                onClick={() =>
-                                                                    HANDLE.openCancelledModal(
-                                                                        item._id
-                                                                    )
-                                                                }>
-                                                                Cancel
+                                                            <div className='action-wrapper'>
+                                                                <div
+                                                                    className='action-item action-item-shipping'
+                                                                    onClick={() =>
+                                                                        HANDLE.openShippingModal(
+                                                                            item._id
+                                                                        )
+                                                                    }>
+                                                                    Shipping
+                                                                </div>
+
+                                                                <div
+                                                                    className='action-item action-item-delete'
+                                                                    onClick={() =>
+                                                                        HANDLE.openCancelledModal(
+                                                                            item._id
+                                                                        )
+                                                                    }>
+                                                                    Cancel
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </td>
@@ -282,10 +274,10 @@ const OrdersPending: React.FC = () => {
                                         })
                                     )}
                                 </tbody>
-                            </table>
+                            </Table>
                         </div>
                     ) : (
-                        <h1>No orders</h1>
+                        <h3>No orders</h3>
                     )}
                 </div>
             </section>

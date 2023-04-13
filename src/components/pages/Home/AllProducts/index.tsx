@@ -1,17 +1,17 @@
-import Skeleton from 'react-loading-skeleton';
-import { useNavigate } from 'react-router-dom';
-import { Table } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { Image, Table } from 'react-bootstrap';
+import Skeleton from 'react-loading-skeleton';
+import { Link, useNavigate } from 'react-router-dom';
 
 import useFetch from '../../../hooks/useFetch';
 
+import axios from 'axios';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+import Modal from '../../../common/Modal';
 import { ProductTypes } from '../../../types';
 import styles from '../Home.module.scss';
-import { useState } from 'react';
-import Modal from '../../../common/Modal';
-import { toast } from 'react-toastify';
-import axios from 'axios';
 
 const AllProduct = () => {
     const navigate = useNavigate();
@@ -22,6 +22,9 @@ const AllProduct = () => {
     const [productId, setProductId] = useState<string>('');
     const [productName, setProductName] = useState<string>('');
 
+    const [searchValue, setSearchValue] = useState<string>('');
+    const [searchResult, setSearchResult] = useState<ProductTypes[]>([]);
+
     const { data, isPending, error } = useFetch(
         `${process.env.REACT_APP_API_URL}/product/get-all-product`
     );
@@ -30,9 +33,29 @@ const AllProduct = () => {
         return Date.parse(b.updatedAt) - Date.parse(a.updatedAt);
     });
 
-    const songs = filterDataByDate;
+    const products = filterDataByDate;
+
+    console.log('searchResult', searchResult);
+    console.log('searchValue', searchValue);
 
     const HANDLE = {
+        search: () => {
+            const result = products.filter((product: ProductTypes) => {
+                return (
+                    product.name
+                        .toLowerCase()
+                        .includes(searchValue.toLowerCase()) ||
+                    product.brand
+                        .toLowerCase()
+                        .includes(searchValue.toLowerCase()) ||
+                    product.type
+                        .toLowerCase()
+                        .includes(searchValue.toLowerCase())
+                );
+            });
+
+            setSearchResult(result);
+        },
         deleteProduct: async () => {
             try {
                 await axios.delete(
@@ -52,6 +75,12 @@ const AllProduct = () => {
             }
         },
     };
+
+    useEffect(() => {
+        if (searchValue === '') {
+            setSearchResult([]);
+        }
+    }, [searchValue]);
 
     if (error) return <div>{error}</div>;
 
@@ -74,26 +103,58 @@ const AllProduct = () => {
                     <div className='product-content--header'>
                         <h3 className='title'>Current product</h3>
                         <div className='search'>
-                            <i className='fa-solid fa-search'></i>
-                            <input />
+                            <div className='search-action'>
+                                <i className='fa-solid fa-search'></i>
+                                <input
+                                    onChange={(e) => {
+                                        setSearchValue(e.target.value);
+                                        HANDLE.search();
+                                    }}
+                                />
+                            </div>
+
+                            {searchResult && searchResult.length > 0 && (
+                                <div className='search-box'>
+                                    {searchResult.map(
+                                        (product: ProductTypes) => {
+                                            return (
+                                                <Link
+                                                    to={`/product-details/${product.slug}`}
+                                                    key={product._id}
+                                                    className='search-box--item'>
+                                                    <figure className='item-img'>
+                                                        <img
+                                                            src={product.image}
+                                                            alt='product'
+                                                        />
+                                                    </figure>
+                                                    <div className='item-name'>
+                                                        {product.name}
+                                                    </div>
+                                                </Link>
+                                            );
+                                        }
+                                    )}
+                                </div>
+                            )}
                         </div>
                     </div>
 
                     <div className='product-table-section'>
-                        <Table hover responsive>
+                        <Table hover responsive borderless>
                             <thead>
                                 <tr>
-                                    <th>Image</th>
+                                    <th className='center'>Image</th>
                                     <th>Name</th>
 
-                                    <th>Price</th>
+                                    <th className='center'>Price</th>
 
-                                    <th>Market price</th>
-                                    <th>Brand</th>
+                                    <th className='center'>Market price</th>
+                                    <th className='center'>Brand</th>
 
-                                    <th>Type</th>
+                                    <th className='center'>Type</th>
 
-                                    <th>Quantity</th>
+                                    <th className='center'>Quantity</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -117,120 +178,16 @@ const AllProduct = () => {
                                         </td>
                                     </tr>
                                 ) : (
-                                    songs.map((item: ProductTypes) => {
-                                        return (
-                                            <tr
-                                                key={item._id}
-                                                className='table-item'>
-                                                <td>
-                                                    <img
-                                                        className='table-item--avatar'
-                                                        src={item.image}
-                                                        alt='avatar'
-                                                        loading='lazy'
-                                                    />
-                                                </td>
-                                                <td>{item.name}</td>
-                                                <td>
-                                                    {item.price.toLocaleString()}
-                                                </td>
-
-                                                <td>
-                                                    {item.price_market.toLocaleString()}
-                                                </td>
-                                                <td>{item.brand}</td>
-                                                <td>{item.type}</td>
-
-                                                <td>{item.quantity}</td>
-
-                                                <td className='action'>
-                                                    <div
-                                                        className='action-item action-item-edit'
-                                                        onClick={() =>
-                                                            navigate(
-                                                                `/edit-product/${item.slug}`
-                                                            )
-                                                        }>
-                                                        Edit
-                                                    </div>
-                                                    <div
-                                                        className='action-item action-item-delete'
-                                                        onClick={() => {
-                                                            setOpenModalDelete(
-                                                                true
-                                                            );
-                                                            setProductId(
-                                                                item._id
-                                                            );
-                                                            setProductName(
-                                                                item.name
-                                                            );
-                                                        }}>
-                                                        Delete
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        );
-                                    })
-                                )}
-                            </tbody>
-                        </Table>
-                        {/* <table id='table-product'>
-                            <thead>
-                                <tr className='table-header'>
-                                    <th className='table-header--col1 center'>
-                                        Image
-                                    </th>
-                                    <th>Product name</th>
-
-                                    <th className='table-header--col1 center'>
-                                        Price
-                                    </th>
-
-                                    <th className='table-header--col1 center'>
-                                        Market price
-                                    </th>
-                                    <th className='table-header--col1 center'>
-                                        Brand
-                                    </th>
-
-                                    <th className='table-header--col1 center'>
-                                        Type
-                                    </th>
-
-                                    <th className='table-header--col1 center'>
-                                        Quantity
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {isPending ? (
-                                    <tr>
-                                        <td>
-                                            <Skeleton />
-                                        </td>
-                                        <td>
-                                            <Skeleton />
-                                        </td>
-                                        <td>
-                                            <Skeleton />
-                                        </td>
-                                        <td>
-                                            <Skeleton />
-                                        </td>
-                                        <td>
-                                            <Skeleton />
-                                        </td>
-                                    </tr>
-                                ) : (
-                                    songs.map((item: ProductTypes) => {
+                                    products.map((item: ProductTypes) => {
                                         return (
                                             <tr
                                                 key={item._id}
                                                 className='table-item'>
                                                 <td className='center'>
-                                                    <img
+                                                    <Image
                                                         className='table-item--avatar'
+                                                        fluid
+                                                        thumbnail
                                                         src={item.image}
                                                         alt='avatar'
                                                         loading='lazy'
@@ -255,30 +212,42 @@ const AllProduct = () => {
                                                     {item.quantity}
                                                 </td>
 
-                                                <td className='action'>
-                                                    <div
-                                                        className='action-item action-item-edit'
-                                                        onClick={() =>
-                                                            navigate(
-                                                                `/edit-product/${item.slug}`
-                                                            )
-                                                        }>
-                                                        Edit
-                                                    </div>
-                                                    <div
-                                                        className='action-item action-item-delete'
-                                                        onClick={() => {
-                                                            setOpenModalDelete(
-                                                                true
-                                                            );
-                                                            setProductId(
-                                                                item._id
-                                                            );
-                                                            setProductName(
-                                                                item.name
-                                                            );
-                                                        }}>
-                                                        Delete
+                                                <td>
+                                                    <div className='action'>
+                                                        <div
+                                                            className='action-item action-item-edit'
+                                                            onClick={() =>
+                                                                navigate(
+                                                                    `/edit-product/${item.slug}`
+                                                                )
+                                                            }>
+                                                            Edit
+                                                        </div>
+                                                        <div
+                                                            className='action-item action-item-delete'
+                                                            onClick={() => {
+                                                                setOpenModalDelete(
+                                                                    true
+                                                                );
+                                                                setProductId(
+                                                                    item._id
+                                                                );
+                                                                setProductName(
+                                                                    item.name
+                                                                );
+                                                            }}>
+                                                            Delete
+                                                        </div>
+
+                                                        <div
+                                                            className='action-item action-item-edit'
+                                                            onClick={() =>
+                                                                navigate(
+                                                                    `/product-details/${item.slug}`
+                                                                )
+                                                            }>
+                                                            Details
+                                                        </div>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -286,7 +255,7 @@ const AllProduct = () => {
                                     })
                                 )}
                             </tbody>
-                        </table> */}
+                        </Table>
                     </div>
                 </section>
             </section>

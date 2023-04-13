@@ -52,7 +52,7 @@ function Modal({
                     className={styles.wrapperModal}
                     ref={modalRef}
                     onClick={handleClickOutside}>
-                    <section className={`container ${size}`}>
+                    <section className={`container-modal ${size}`}>
                         <header className='heading'>
                             <h4 className='title'>{title}</h4>
                             <span

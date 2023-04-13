@@ -6,12 +6,14 @@ import HomePage from './components/pages/Home';
 import AddProduct from './components/pages/Home/AddProduct';
 import AllProduct from './components/pages/Home/AllProducts';
 import EditProduct from './components/pages/Home/EditProduct';
+import HomeComp from './components/pages/Home/HomePage';
 import AllOrders from './components/pages/Home/Orders';
 import OrderCancelled from './components/pages/Home/OrdersCancelled';
 import OrderCompleted from './components/pages/Home/OrdersCompleted';
 import OrdersPending from './components/pages/Home/OrdersPending';
 import OrderReturns from './components/pages/Home/OrdersReturns';
 import OrderShipping from './components/pages/Home/OrdersShipping';
+import ProductDetails from './components/pages/Home/ProductDetails';
 
 function App() {
     return (
@@ -25,12 +27,18 @@ function App() {
                                 <HomePage />
                             </PrivateRoute>
                         }>
-                        <Route path='/' element={<AllProduct />} />
+                        <Route path='/' element={<HomeComp />} />
                         <Route path='/add-product' element={<AddProduct />} />
                         <Route
                             path='/edit-product/:slug'
                             element={<EditProduct />}
                         />
+
+                        <Route
+                            path='/product-details/:slug'
+                            element={<ProductDetails />}
+                        />
+                        <Route path='/products' element={<AllProduct />} />
                         <Route path='/orders' element={<AllOrders />} />
                         <Route
                             path='/orders-pending'

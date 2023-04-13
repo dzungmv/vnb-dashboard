@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { Table } from 'react-bootstrap';
 import Skeleton from 'react-loading-skeleton';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -66,7 +67,7 @@ const OrderShipping: React.FC = () => {
         changeToReturns: async () => {
             try {
                 setIsReturnsPending(true);
-                await axios.put(
+                await axios.patch(
                     `${process.env.REACT_APP_API_URL}/admin/update-order/${returnsId}`,
                     {
                         status: 'returns',
@@ -99,7 +100,7 @@ const OrderShipping: React.FC = () => {
         changToCompleted: async () => {
             try {
                 setIsCompletedPending(true);
-                await axios.put(
+                await axios.patch(
                     `${process.env.REACT_APP_API_URL}/admin/update-order/${completedId}`,
                     {
                         status: 'completed',
@@ -161,30 +162,19 @@ const OrderShipping: React.FC = () => {
                 <div className='content'>
                     {finalData && finalData.length > 0 ? (
                         <div className='product-table-section'>
-                            <table id='table-product'>
+                            <Table hover responsive borderless>
                                 <thead>
-                                    <tr className='table-header'>
-                                        <th className='table-header--col1 center'>
-                                            Orderer
-                                        </th>
-                                        <th className='table-header--col1 center'>
-                                            Phone number
-                                        </th>
+                                    <tr>
+                                        <th className='center'>Orderer</th>
+                                        <th>Phone number</th>
 
-                                        <th className='table-header--col1 center'>
-                                            Payment
-                                        </th>
+                                        <th className='center'>Payment</th>
 
-                                        <th className='table-header--col1 center'>
-                                            Address
-                                        </th>
-                                        <th className='table-header--col1 center'>
-                                            Status
-                                        </th>
+                                        <th className='center'>Address</th>
+                                        <th className='center'>Status</th>
 
-                                        <th className='table-header--col1 center'>
-                                            Total
-                                        </th>
+                                        <th className='center'>Total</th>
+                                        <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -243,50 +233,52 @@ const OrderShipping: React.FC = () => {
                                                         {item.total.toLocaleString()}
                                                         ₫
                                                     </td>
-                                                    <td className='action'>
-                                                        <div
-                                                            className='action-item action-item-edit'
-                                                            onClick={() =>
-                                                                HANDLE.openDetailsModal(
-                                                                    item.products
-                                                                )
-                                                            }>
-                                                            Details
-                                                        </div>
-
-                                                        {item.status ===
-                                                            'shipping' && (
-                                                            <div className='action-wrapper'>
-                                                                <div
-                                                                    className='action-item action-item-completed'
-                                                                    onClick={() =>
-                                                                        HANDLE.openCompletedModal(
-                                                                            item._id
-                                                                        )
-                                                                    }>
-                                                                    Completed
-                                                                </div>
-                                                                <div
-                                                                    className='action-item action-item-returns'
-                                                                    onClick={() =>
-                                                                        HANDLE.openReturnsModal(
-                                                                            item._id
-                                                                        )
-                                                                    }>
-                                                                    Returns
-                                                                </div>
+                                                    <td>
+                                                        <div className='action'>
+                                                            <div
+                                                                className='action-item action-item-edit'
+                                                                onClick={() =>
+                                                                    HANDLE.openDetailsModal(
+                                                                        item.products
+                                                                    )
+                                                                }>
+                                                                Details
                                                             </div>
-                                                        )}
+
+                                                            {item.status ===
+                                                                'shipping' && (
+                                                                <div className='action-wrapper'>
+                                                                    <div
+                                                                        className='action-item action-item-completed'
+                                                                        onClick={() =>
+                                                                            HANDLE.openCompletedModal(
+                                                                                item._id
+                                                                            )
+                                                                        }>
+                                                                        Completed
+                                                                    </div>
+                                                                    <div
+                                                                        className='action-item action-item-returns'
+                                                                        onClick={() =>
+                                                                            HANDLE.openReturnsModal(
+                                                                                item._id
+                                                                            )
+                                                                        }>
+                                                                        Returns
+                                                                    </div>
+                                                                </div>
+                                                            )}
+                                                        </div>
                                                     </td>
                                                 </tr>
                                             );
                                         })
                                     )}
                                 </tbody>
-                            </table>
+                            </Table>
                         </div>
                     ) : (
-                        <h1>No orders</h1>
+                        <h3>No orders</h3>
                     )}
                 </div>
             </section>
