@@ -124,7 +124,6 @@ const OrdersPending: React.FC = () => {
                 setIsCancelledPending(false);
                 if (error?.response?.status === 401) {
                     dispatch(logout());
-                    navigate('/login');
                 }
             }
         },
@@ -149,7 +148,6 @@ const OrdersPending: React.FC = () => {
                 setLoading(false);
                 if (error?.response?.status === 401) {
                     dispatch(logout());
-                    navigate('/login');
                 }
             }
         })();

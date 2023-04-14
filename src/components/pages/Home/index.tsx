@@ -86,7 +86,6 @@ const HomePage: React.FC = () => {
             console.error(error);
             if (error?.response?.status === 401) {
                 dispatch(logout());
-                navigate('/login');
             }
         }
     };

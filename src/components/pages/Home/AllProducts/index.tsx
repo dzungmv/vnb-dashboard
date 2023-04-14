@@ -35,9 +35,6 @@ const AllProduct = () => {
 
     const products = filterDataByDate;
 
-    console.log('searchResult', searchResult);
-    console.log('searchValue', searchValue);
-
     const HANDLE = {
         search: () => {
             const result = products.filter((product: ProductTypes) => {

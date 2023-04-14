@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { useState } from 'react';
+import { Button } from 'react-bootstrap';
 import Skeleton from 'react-loading-skeleton';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -187,7 +188,11 @@ const AddProduct = () => {
             <section className={styles.wrapperAddProduct}>
                 <header className='add-product--header'>
                     <h3 className='title'>Add new product</h3>
-                    <button onClick={HANDLE.createProduct}>Add</button>
+                    <Button
+                        variant='outline-success'
+                        onClick={HANDLE.createProduct}>
+                        <i className='fa-solid fa-plus'></i> Add
+                    </Button>
                 </header>
 
                 <div

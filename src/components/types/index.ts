@@ -33,7 +33,7 @@ export type ProductTypes = {
 
 
 export type CartType = {
-    _id: string,
+    _id?: string,
     productId: string,
     product_name: string,
     product_image: string,

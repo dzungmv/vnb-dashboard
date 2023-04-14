@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import { Table } from 'react-bootstrap';
 import Skeleton from 'react-loading-skeleton';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 import Modal from '../../../common/Modal';
 import { CartType, OrderType, UserTypes } from '../../../types';
 import { logout } from '../../../_redux/features/user';
@@ -13,7 +12,7 @@ import styles from './orders.module.scss';
 
 const OrderCancelled: React.FC = () => {
     const dispatch = useDispatch();
-    const navigate = useNavigate();
+
     const user: UserTypes = useSelector((state: any) => state.user.user);
 
     const [data, setData] = useState<any>([]);
@@ -66,7 +65,6 @@ const OrderCancelled: React.FC = () => {
                 setLoading(false);
                 if (error?.response?.status === 401) {
                     dispatch(logout());
-                    navigate('/login');
                 }
             }
         })();

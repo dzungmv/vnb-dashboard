@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import PrivateRoute from './components/common/PrivateRoute';
 import LoginPage from './components/pages/Auth/Login';
 import HomePage from './components/pages/Home';
+import AddOrder from './components/pages/Home/AddOrder';
 import AddProduct from './components/pages/Home/AddProduct';
 import AllProduct from './components/pages/Home/AllProducts';
 import EditProduct from './components/pages/Home/EditProduct';
@@ -29,6 +30,7 @@ function App() {
                         }>
                         <Route path='/' element={<HomeComp />} />
                         <Route path='/add-product' element={<AddProduct />} />
+                        <Route path='/add-order' element={<AddOrder />} />
                         <Route
                             path='/edit-product/:slug'
                             element={<EditProduct />}

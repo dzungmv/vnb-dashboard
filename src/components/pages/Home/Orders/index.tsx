@@ -35,6 +35,7 @@ const AllOrders: React.FC = () => {
 
     const [completedModal, setCompletedModal] = useState<boolean>(false);
     const [completedId, setCompletedId] = useState<string>('');
+    const [completedTotal, setCompletedTotal] = useState<number>(0);
     const [isCompletedPending, setIsCompletedPending] =
         useState<boolean>(false);
 
@@ -146,6 +147,7 @@ const AllOrders: React.FC = () => {
                     `${process.env.REACT_APP_API_URL}/admin/update-order/${completedId}`,
                     {
                         status: 'completed',
+                        total: completedTotal,
                     },
                     {
                         headers: {
@@ -219,7 +221,6 @@ const AllOrders: React.FC = () => {
                 setLoading(false);
                 if (error?.response?.status === 401) {
                     dispatch(logout());
-                    navigate('/login');
                 }
             }
         })();
@@ -355,11 +356,14 @@ const AllOrders: React.FC = () => {
                                                                 <div className='action-wrapper'>
                                                                     <div
                                                                         className='action-item action-item-completed'
-                                                                        onClick={() =>
+                                                                        onClick={() => {
+                                                                            setCompletedTotal(
+                                                                                item.total
+                                                                            );
                                                                             HANDLE.openCompletedModal(
                                                                                 item._id
-                                                                            )
-                                                                        }>
+                                                                            );
+                                                                        }}>
                                                                         Completed
                                                                     </div>
                                                                     <div
@@ -467,6 +471,7 @@ const AllOrders: React.FC = () => {
                     close={() => {
                         setCompletedId('');
                         setCompletedModal(false);
+                        setCompletedTotal(0);
                     }}>
                     <div className={styles.wrapperShippingModal}>
                         <div className='content'>
@@ -481,6 +486,7 @@ const AllOrders: React.FC = () => {
                                 onClick={() => {
                                     setCompletedId('');
                                     setCompletedModal(false);
+                                    setCompletedTotal(0);
                                 }}>
                                 Close
                             </div>

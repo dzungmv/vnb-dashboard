@@ -29,6 +29,7 @@ const OrderShipping: React.FC = () => {
 
     const [completedModal, setCompletedModal] = useState<boolean>(false);
     const [completedId, setCompletedId] = useState<string>('');
+    const [completedTotal, setCompletedTotal] = useState<number>(0);
     const [isCompletedPending, setIsCompletedPending] =
         useState<boolean>(false);
 
@@ -93,7 +94,6 @@ const OrderShipping: React.FC = () => {
                 setIsReturnsPending(false);
                 if (error?.response?.status === 401) {
                     dispatch(logout());
-                    navigate('/login');
                 }
             }
         },
@@ -104,6 +104,7 @@ const OrderShipping: React.FC = () => {
                     `${process.env.REACT_APP_API_URL}/admin/update-order/${completedId}`,
                     {
                         status: 'completed',
+                        total: completedTotal,
                     },
                     {
                         headers: {
@@ -126,7 +127,6 @@ const OrderShipping: React.FC = () => {
                 setIsCompletedPending(false);
                 if (error?.response?.status === 401) {
                     dispatch(logout());
-                    navigate('/login');
                 }
             }
         },
@@ -147,9 +147,13 @@ const OrderShipping: React.FC = () => {
                 );
                 setData(res?.data?.data);
                 setLoading(false);
-            } catch (error) {
+            } catch (error: any) {
                 console.error(error);
                 setLoading(false);
+
+                if (error?.response?.status === 401) {
+                    dispatch(logout());
+                }
             }
         })();
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -250,11 +254,14 @@ const OrderShipping: React.FC = () => {
                                                                 <div className='action-wrapper'>
                                                                     <div
                                                                         className='action-item action-item-completed'
-                                                                        onClick={() =>
+                                                                        onClick={() => {
+                                                                            setCompletedTotal(
+                                                                                item.total
+                                                                            );
                                                                             HANDLE.openCompletedModal(
                                                                                 item._id
-                                                                            )
-                                                                        }>
+                                                                            );
+                                                                        }}>
                                                                         Completed
                                                                     </div>
                                                                     <div
@@ -330,6 +337,7 @@ const OrderShipping: React.FC = () => {
                     close={() => {
                         setCompletedId('');
                         setCompletedModal(false);
+                        setCompletedTotal(0);
                     }}>
                     <div className={styles.wrapperShippingModal}>
                         <div className='content'>
@@ -344,6 +352,7 @@ const OrderShipping: React.FC = () => {
                                 onClick={() => {
                                     setCompletedId('');
                                     setCompletedModal(false);
+                                    setCompletedTotal(0);
                                 }}>
                                 Close
                             </div>

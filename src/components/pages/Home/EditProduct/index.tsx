@@ -204,7 +204,6 @@ const EditProduct = () => {
                 setIsPendingUpdateProduct(false);
                 if (error?.response?.status === 401) {
                     dispatch(logout());
-                    navigate('/login');
                 }
             }
         },
