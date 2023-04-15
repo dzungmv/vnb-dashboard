@@ -198,7 +198,7 @@ const EditProduct = () => {
                 );
                 setIsPendingUpdateProduct(false);
                 toast.success('Update product successfully');
-                navigate('/');
+                navigate('/products');
             } catch (error: any) {
                 toast.error('Something went wrong!');
                 setIsPendingUpdateProduct(false);

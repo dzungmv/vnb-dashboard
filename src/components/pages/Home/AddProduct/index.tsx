@@ -76,20 +76,20 @@ const listStores = [
 ];
 
 const listProductType = [
-    'Racket',
-    'Shoes',
-    'Shirt',
-    'Skirt',
-    'Pant',
-    'Bag',
-    'Balo',
-    'Accessories',
+    'racket',
+    'shoes',
+    'shirt',
+    'skirt',
+    'pant',
+    'bag',
+    'balo',
+    'accessories',
 ];
 
 const AddProduct = () => {
     const richTextModules = {
         toolbar: [
-            [{ header: [1, 2, 3, 4, 5, 6] }],
+            [{ header: [0, 1, 2, 3, 4, 5, 6] }],
             ['bold', 'italic', 'underline', 'strike', 'blockquote'],
             [
                 { list: 'ordered' },
@@ -98,6 +98,9 @@ const AddProduct = () => {
                 { indent: '+1' },
             ],
             ['link', 'image', 'video'],
+            ['clean'],
+
+            ['code-block'],
         ],
     };
 
@@ -162,9 +165,6 @@ const AddProduct = () => {
                         },
                     }
                 );
-                setIsPendingAddProduct(false);
-
-                toast.success('Create product successfully');
                 setName('');
                 setImage('');
                 setType('');
@@ -175,7 +175,9 @@ const AddProduct = () => {
                 setQuantity(1);
                 setStores([]);
                 setDescription('');
-                navigate('/');
+                setIsPendingAddProduct(false);
+                toast.success('Create product successfully');
+                navigate('/products');
             } catch (error) {
                 toast.error('Something went wrong');
                 setIsPendingAddProduct(false);

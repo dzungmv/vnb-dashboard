@@ -2,16 +2,22 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import Skeleton from 'react-loading-skeleton';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { ProductTypes } from '../../../types';
+import swal from 'sweetalert';
+import { ProductTypes, UserTypes } from '../../../types';
+import { logout } from '../../../_redux/features/user';
 import styles from '../Home.module.scss';
 import style from './ProductDetails.module.scss';
 
 const ProductDetails: React.FC = () => {
+    const user: UserTypes = useSelector((state: any) => state.user.user);
+
     const { slug } = useParams();
 
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const [isPending, setIsPending] = useState<boolean>(false);
 
@@ -33,15 +39,51 @@ const ProductDetails: React.FC = () => {
             }
         })();
     }, [slug]);
+
+    const deleteProduct = async () => {
+        try {
+            await axios.delete(
+                `${process.env.REACT_APP_API_URL}/product/delete-product/${product._id}`,
+                {
+                    headers: {
+                        authorization: user?.tokens?.accessToken,
+                        'x-client-id': user?.user?._id,
+                    },
+                }
+            );
+            swal({
+                title: 'Delete product successfully!',
+                icon: 'success',
+            }).then(() => {
+                navigate('/products');
+            });
+        } catch (error: any) {
+            toast.error('Some thing went wrong!');
+
+            if (error?.response?.status === 401) {
+                dispatch(logout());
+            }
+        }
+    };
     return (
         <section className={style.wrapperProductDetails}>
             <header className='header-wrap'>
                 <h3>Product details</h3>
-                <Button
-                    variant='outline-primary'
-                    onClick={() => navigate(`/edit-product/${slug}`)}>
-                    <i className='fas fa-pencil'></i> Edit product
-                </Button>
+
+                <div
+                    style={{
+                        display: 'flex',
+                        gap: '1rem',
+                    }}>
+                    <Button variant='outline-danger' onClick={deleteProduct}>
+                        <i className='fas fa-trash'></i> Delete product
+                    </Button>
+                    <Button
+                        variant='outline-primary'
+                        onClick={() => navigate(`/edit-product/${slug}`)}>
+                        <i className='fas fa-pencil'></i> Edit product
+                    </Button>
+                </div>
             </header>
 
             {isPending ? (

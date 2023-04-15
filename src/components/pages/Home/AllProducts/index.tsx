@@ -12,6 +12,7 @@ import { toast } from 'react-toastify';
 import Modal from '../../../common/Modal';
 import { ProductTypes } from '../../../types';
 import styles from '../Home.module.scss';
+import swal from 'sweetalert';
 
 const AllProduct = () => {
     const navigate = useNavigate();
@@ -59,14 +60,19 @@ const AllProduct = () => {
                     `${process.env.REACT_APP_API_URL}/product/delete-product/${productId}`,
                     {
                         headers: {
-                            authorization: user.tokens.accessToken,
-                            'x-client-id': user.user.id,
+                            authorization: user?.tokens?.accessToken,
+                            'x-client-id': user?.user?._id,
                         },
                     }
                 );
-                toast.success('Delete product success!');
+
                 setOpenModalDelete(false);
-                navigate(0);
+                swal({
+                    title: 'Delete product successfully!',
+                    icon: 'success',
+                }).then(() => {
+                    window.location.reload();
+                });
             } catch (error) {
                 toast.error('Some thing went wrong!');
             }
@@ -259,7 +265,7 @@ const AllProduct = () => {
 
             {openModalDelete && (
                 <Modal
-                    title='Delete Song'
+                    title='Delete product'
                     show={openModalDelete}
                     close={() => {
                         setOpenModalDelete(false);
@@ -270,7 +276,7 @@ const AllProduct = () => {
                     <section className={styles.wrapperDeleteModal}>
                         <div className='modal-content'>
                             <h4 className='title'>
-                                Are you sure delete this song?
+                                Are you sure delete this product?
                             </h4>
                             <p className='description'>{productName}</p>
                         </div>
