@@ -34,15 +34,18 @@ const HomeComp: React.FC = () => {
                 setSasData(res?.data?.data);
                 setIsPending(false);
             } catch (error: any) {
+                console.log(error);
+
                 setIsPending(false);
-                if (error?.response?.status === 401) {
+                if (
+                    error?.response?.status === 401 ||
+                    error?.response?.status === 500
+                ) {
                     dispatch(logout());
                 }
             }
         })();
     }, []);
-
-    console.log(sasData);
 
     return (
         <section className={styles.wrapperHomeComp}>
@@ -127,7 +130,7 @@ const HomeComp: React.FC = () => {
                                 <h3 className='heading'>New account</h3>
                                 <div className='content'>
                                     <p className='number'>
-                                        {sasData.users - 1} account
+                                        {sasData?.users - 1} account
                                     </p>
                                     <span className='unit'>
                                         <i className='fa-solid fa-user-plus'></i>
@@ -138,7 +141,7 @@ const HomeComp: React.FC = () => {
                                 <h3 className='heading'>All order</h3>
                                 <div className='content'>
                                     <p className='number'>
-                                        {sasData.orders} orders
+                                        {sasData?.orders} orders
                                     </p>
                                     <span className='unit'>
                                         <i className='fa-solid fa-shopping-cart'></i>
@@ -156,7 +159,8 @@ const HomeComp: React.FC = () => {
                                 <h3 className='heading'>Revenue</h3>
                                 <div className='content'>
                                     <p className='number'>
-                                        {sasData.revenue.amount.toLocaleString()}
+                                        {sasData?.revenue?.amount?.toLocaleString() ||
+                                            0}{' '}
                                         ₫
                                     </p>
                                     <span className='unit'>
