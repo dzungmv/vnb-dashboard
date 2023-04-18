@@ -81,15 +81,15 @@ const OrderReturns: React.FC = () => {
                                 <thead>
                                     <tr>
                                         <th>Time</th>
-                                        <th className=' center'>Orderer</th>
-                                        <th className=' center'>Phone</th>
+                                        <th className='center'>Orderer</th>
+                                        <th className='center'>Phone</th>
 
-                                        <th className=' center'>Payment</th>
+                                        <th className='center'>Payment</th>
 
-                                        <th className=' center'>Address</th>
-                                        <th className=' center'>Status</th>
+                                        <th className='center'>Address</th>
+                                        <th className='center'>Status</th>
 
-                                        <th className=' center'>Total</th>
+                                        <th className='center'>Total</th>
                                         <th></th>
                                     </tr>
                                 </thead>

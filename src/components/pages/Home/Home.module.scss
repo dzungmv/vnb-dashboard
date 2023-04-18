@@ -248,6 +248,8 @@
                     padding-top: 50px;
                     padding-bottom: 16px;
                     border-radius: 20px 20px 8px 8px;
+                    overflow-y: auto;
+                    max-height: 400px;
 
                     &--item {
                         display: flex;

@@ -27,7 +27,7 @@ const AllProduct = () => {
     const [searchResult, setSearchResult] = useState<ProductTypes[]>([]);
 
     const { data, isPending, error } = useFetch(
-        `${process.env.REACT_APP_API_URL}/product/get-all-product`
+        `${process.env.REACT_APP_API_URL}/product/get-products`
     );
 
     const filterDataByDate = data?.data.sort((a: any, b: any) => {
